@@ -1,4 +1,4 @@
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
+import { useRecoilValue } from "recoil";
 import { RenderMailList } from "../components/RenderMailList";
 import { selectedMailAtom } from "../store/mail-store";
 import { MailCard } from "../components/MailCard";
@@ -9,11 +9,7 @@ type Props = {
 }
 export const HomePage = ({ }: Props) => {
 
-    console.log("Homepage called !!!");
-
-
     const selectedMail = useRecoilValue(selectedMailAtom);
-    console.log(selectedMail);
 
     return (
         <>

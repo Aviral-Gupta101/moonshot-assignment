@@ -1,8 +1,6 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { UserAvatar } from "./UserAvatar";
-import { mailSelector, mailTagsAtom, selectedMailAtom } from "../store/mail-store";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { mailBodyAtomFamily, mailSelector, mailTagsAtom, selectedMailAtom } from "../store/mail-store";
 import { LoaderCircle } from "lucide-react";
 import { formatTimestamp } from "../utils/timestamp-converter";
 
@@ -13,44 +11,11 @@ export const MailCard = ({ }: Props) => {
 
     const selectedMail = useRecoilValue(selectedMailAtom);
     const mailData = useRecoilValue(mailSelector(selectedMail));
-    const [contentBody, setContentBody] = useState<string>("");
     const [mailTags, setMailTag] = useRecoilState(mailTagsAtom);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState("");
-
+    const getMailBody = useRecoilValueLoadable(mailBodyAtomFamily(selectedMail));
 
     const favorite = mailTags.find((item) => item.id === selectedMail)?.favorite;
 
-    async function fetchMail() {
-
-        try {
-            setIsLoading(true);
-
-            if (selectedMail === null)
-                return;
-
-            const res = await axios.get(`https://flipkart-email-mock.vercel.app/?id=${selectedMail}`);
-
-            setContentBody(res.data.body)
-
-        } catch (error) {
-            console.log("Error in fetched mail body", error);
-            setIsError("Unable to fetch mail content");
-
-        } finally {
-            setIsLoading(false);
-
-            console.log("False loading 1!1");
-
-        }
-
-    }
-
-    useEffect(() => {
-
-        fetchMail();
-
-    }, [selectedMail]);
 
     function handleMarkFavorite(id: string){
 
@@ -69,19 +34,19 @@ export const MailCard = ({ }: Props) => {
 
     function RenderContent() {
 
-        if(isError != ""){
+        if(getMailBody.state === "hasError"){
             return <div className="flex-1 w-full flex justify-center items-center  h-full text-red-500">
-                {isError}
+                Something went wrong
             </div>
         }
 
-        else if (isLoading) {
+        else if (getMailBody.state === "loading") {
             return <div className="flex-1 w-full flex justify-center items-center  h-full">
                 <LoaderCircle className="animate-spin" />
             </div>
         }
 
-        else if (isLoading === false) {
+        else if (getMailBody.state === "hasValue" && getMailBody.contents) {
 
             return (
                 <>
@@ -123,7 +88,7 @@ export const MailCard = ({ }: Props) => {
                     </header>
 
                     <section className="text-sm pl-[68px] text-text-primary mt-5 flex-1 h-full">
-                        <div className="Container pb-10" dangerouslySetInnerHTML={{ __html: contentBody }}></div>
+                        <div className="Container pb-10" dangerouslySetInnerHTML={{ __html: getMailBody.contents }}></div>
                     </section>
                 </>
             )

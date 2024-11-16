@@ -14,8 +14,6 @@ export const NavButton = ({ title, isSelected, setActiveButtonTitle }: Props) =>
 
     function handleClick(title: NavbarSelectedField){
 
-        console.log("Clciked !!!");
-
         setActiveButtonTitle(title);
         setMailFilter(title);
     }

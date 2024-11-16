@@ -1,5 +1,5 @@
 import axios from "axios";
-import { atom, selector, selectorFamily } from "recoil";
+import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
 export interface MailSchema {
     id: string,
@@ -96,3 +96,19 @@ export const mailTagsAtom = atom<MailTags[]>({
         }
     })
 });
+
+export const mailBodyAtomFamily = atomFamily({
+    key: "mailBodyAtomFamily",
+    default: selectorFamily({
+        key: "mailBodyAtomFamilySelector",
+        get: (id: string | null) => async () => {
+
+            if(id === null)
+                return;
+
+            const res = await axios.get(`https://flipkart-email-mock.vercel.app/?id=${id}`);
+            
+            return res.data.body;
+        }
+    })
+})
