@@ -16,7 +16,7 @@ export function formatTimestamp(timestamp: number) {
 
     formattedDate = formattedDate.replace(',', '');
 
-    const finalFormattedDate = formattedDate.replace(/(\s)(AM|PM)/i, (_, space, ampm) => {
+    const finalFormattedDate = formattedDate.replace(/(\s)(AM|PM)/i, (_, __, ampm) => {
         return ampm.toLowerCase();
     });
 
