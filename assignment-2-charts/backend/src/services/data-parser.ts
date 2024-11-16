@@ -177,8 +177,6 @@ export async function getBarChartData(filter: BarChartFilter = {
         },
     ]
 
-    // console.log(result);
-
     return result;
 }
 
@@ -203,9 +201,6 @@ export async function getLineChartData(filter: LineChartFilter = {
     const allDataMap = new Map<string, number>();
 
     data.forEach((item, _) => {
-
-        // console.log("Here");
-
 
         let value = 0;
 
