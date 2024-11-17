@@ -7,6 +7,9 @@ import { NotFoundPage } from "./pages/NotFounPage";
 import { RecoilRoot } from "recoil";
 import { ShareChartPage } from "./pages/ShareChartPage";
 
+console.log("Mode: ", import.meta.env.MODE);
+console.log("SERVER ADDRESS: ", import.meta.env.VITE_SERVER_ADDRESS);
+
 function App() {
 
 
